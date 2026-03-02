@@ -1,45 +1,40 @@
 import { createContext, useState, useEffect } from 'react';
-import { createChallenge } from '../models/Challenge';
+import { criarDesafio } from '../models/Challenge'; // Nome corrigido aqui
 
 export const ChallengeContext = createContext();
 
 export const ChallengeProvider = ({ children }) => {
-  // Estado que guarda a lista de todos os desafios
   const [challenges, setChallenges] = useState(() => {
-    // Tenta carregar do LocalStorage ao iniciar
     const saved = localStorage.getItem('@DesafioCasal:challenges');
     return saved ? JSON.parse(saved) : [];
   });
 
-  // Toda vez que a lista mudar, salva no LocalStorage automaticamente
   useEffect(() => {
     localStorage.setItem('@DesafioCasal:challenges', JSON.stringify(challenges));
   }, [challenges]);
 
-  // Função para adicionar um novo desafio
-  const addChallenge = (title, type) => {
-    const newChallenge = createChallenge(title, type);
-    setChallenges((prev) => [...prev, newChallenge]);
+  const adicionarDesafio = (titulo, tipo, criadoPor) => {
+    const novo = criarDesafio(titulo, tipo, criadoPor);
+    setChallenges((prev) => [...prev, novo]);
   };
 
-  // Função para completar um desafio e ganhar 1 ponto
-  const completeChallenge = (id) => {
+  const completarDesafio = (id) => {
     setChallenges((prev) =>
-      prev.map((ch) =>
-        ch.id === id ? { ...ch, completed: true } : ch
-      )
+      prev.map((ch) => (ch.id === id ? { ...ch, concluido: true } : ch))
     );
   };
 
-  // Cálculo de pontuação total (1 ponto por desafio completado)
-  const totalPoints = challenges.filter(ch => ch.completed).length;
+  // Placar Individual
+  const pontosKawa = challenges.filter(ch => ch.concluido && ch.criadoPor === 'Kawa').length;
+  const pontosParceira = challenges.filter(ch => ch.concluido && ch.criadoPor === 'Parceira').length;
 
   return (
     <ChallengeContext.Provider value={{
       challenges,
-      addChallenge,
-      completeChallenge,
-      totalPoints
+      adicionarDesafio,
+      completarDesafio,
+      pontosKawa,
+      pontosParceira
     }}>
       {children}
     </ChallengeContext.Provider>

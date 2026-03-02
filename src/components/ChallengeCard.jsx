@@ -1,29 +1,30 @@
 import React, { useContext } from 'react';
 import { ChallengeContext } from '../context/ChallengeContext';
-import { getChallengeStatus } from '../models/Challenge';
+import { obterStatusDesafio } from '../models/Challenge';
 
 export const ChallengeCard = ({ challenge }) => {
-  const { completeChallenge } = useContext(ChallengeContext);
-  const status = getChallengeStatus(challenge);
+  const { completarDesafio } = useContext(ChallengeContext);
+  const status = obterStatusDesafio(challenge);
 
-  // Cores dinâmicas baseadas no tipo
   const typeStyles = {
-    daily: 'border-blue-500 bg-blue-50',
-    weekly: 'border-purple-500 bg-purple-50',
-    monthly: 'border-pink-500 bg-pink-50'
+    diario: 'border-blue-500 bg-blue-50',
+    semanal: 'border-purple-500 bg-purple-50',
+    mensal: 'border-pink-500 bg-pink-50'
   };
 
   return (
-    <div className={`p-4 border-l-4 rounded-r-lg shadow-sm mb-3 ${typeStyles[challenge.type]}`}>
+    <div className={`p-4 border-l-4 rounded-r-lg shadow-sm mb-3 ${typeStyles[challenge.tipo]}`}>
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="font-bold text-gray-800">{challenge.title}</h3>
-          <p className="text-xs text-gray-500 capitalize">{challenge.type}</p>
+          <h3 className="font-bold text-gray-800">{challenge.titulo}</h3>
+          <p className="text-[10px] text-gray-400 uppercase font-bold tracking-tight">
+            {challenge.tipo} • Por {challenge.criadoPor}
+          </p>
         </div>
 
         {status === 'active' && (
           <button
-            onClick={() => completeChallenge(challenge.id)}
+            onClick={() => completarDesafio(challenge.id)}
             className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium hover:bg-green-600 transition"
           >
             Concluir

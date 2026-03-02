@@ -1,34 +1,31 @@
-export const createChallenge = (title, type) => {
-  const now = new Date();
-  const expiresAt = new Date();
+// src/models/Challenge.js
 
-  // Lógica de expiração baseada no tipo
-  if (type === 'daily') {
-    expiresAt.setDate(now.getDate() + 1);
-  } else if (type === 'weekly') {
-    expiresAt.setDate(now.getDate() + 7);
-  } else if (type === 'monthly') {
-    expiresAt.setDate(now.getDate() + 31);
+export const criarDesafio = (titulo, tipo, criadoPor) => {
+  const agora = new Date();
+  const expiraEm = new Date();
+
+  if (tipo === 'diario') {
+    expiraEm.setDate(agora.getDate() + 1);
+  } else if (tipo === 'semanal') {
+    expiraEm.setDate(agora.getDate() + 7);
+  } else if (tipo === 'mensal') {
+    expiraEm.setDate(agora.getDate() + 31);
   }
 
   return {
-    id: crypto.randomUUID(), // Gera um ID único automático
-    title,
-    type, // 'daily', 'weekly', 'monthly'
-    points: 1,
-    completed: false,
-    createdAt: now.toISOString(),
-    expiresAt: expiresAt.toISOString(),
+    id: crypto.randomUUID(),
+    titulo,
+    tipo,
+    criadoPor, // 'Kawa' ou 'Parceira'
+    concluido: false,
+    criadoEm: agora.toISOString(),
+    expiraEm: expiraEm.toISOString(),
   };
 };
 
-export const getChallengeStatus = (challenge) => {
-  if (challenge.completed) return 'completed';
-
-  const now = new Date();
-  const expiration = new Date(challenge.expiresAt);
-
-  if (now > expiration) return 'expired';
-
-  return 'active';
+export const obterStatusDesafio = (desafio) => {
+  if (desafio.concluido) return 'completed';
+  const agora = new Date();
+  const expiracao = new Date(desafio.expiraEm);
+  return agora > expiracao ? 'expired' : 'active';
 };
