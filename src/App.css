@@ -1,0 +1,25 @@
+useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      *::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+      * { -ms-overflow-style: none !important; scrollbar-width: none !important; }
+
+      .no-scrollbar {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        scroll-behavior: smooth;
+        /* Faz o scroll "grudar" nos itens como um carrossel real */
+        scroll-snap-type: x mandatory; 
+        -webkit-overflow-scrolling: touch !important;
+        touch-action: pan-x !important;
+      }
+
+      .snap-item {
+        flex-shrink: 0 !important;
+        scroll-snap-align: center; /* Centraliza o item ao rolar */
+      }
+    `;
+    document.head.append(style);
+    return () => style.remove();
+  }, []);
